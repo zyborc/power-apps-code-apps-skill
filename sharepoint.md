@@ -117,9 +117,8 @@ const options = await MyListService.getReferencedEntity('Status');
 const [statusOptions, setStatusOptions] = useState<string[]>([]);
 
 useEffect(() => {
-  if (!isInitialized) return;
   MyListService.getReferencedEntity('Status').then(setStatusOptions);
-}, [isInitialized]);
+}, []);
 
 // Render
 <select>

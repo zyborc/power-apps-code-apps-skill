@@ -158,7 +158,7 @@ Run through this before shipping any view:
 - [ ] Numbers / IDs / percentages use DM Mono
 - [ ] Status indicators use semantic color + dot pattern
 - [ ] Empty states in all lists and tables
-- [ ] Loading state present (guard: isInitialized)
+- [ ] Loading state present in data hooks (standard async pattern)
 - [ ] No direct API calls — only generated services
 - [ ] Root CSS set (height 100%, overflow hidden)
 - [ ] Role-based visibility applied where needed

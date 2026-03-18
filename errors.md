@@ -4,25 +4,7 @@ Read this before writing any SDK, connector, or data-layer code.
 
 ---
 
-## 1. `initialize()` Not Awaited
-
-**Symptom:** Connector calls return empty or throw immediately.
-
-```typescript
-// ❌ Wrong — no await
-initialize();
-const items = await MyListService.getall();
-
-// ✅ Correct — always await
-await initialize();
-const items = await MyListService.getall();
-```
-
-> **Rule:** `initialize()` must resolve before ANY data call. Guard all data fetching with `isInitialized` state.
-
----
-
-## 2. Direct `fetch` / `axios` to Connectors
+## 1. Direct `fetch` / `axios` to Connectors
 
 **Symptom:** CORS errors, 401s, or missing auth headers.
 
@@ -39,7 +21,7 @@ The Power Apps host injects auth tokens into connector calls automatically. Dire
 
 ---
 
-## 3. Editing Generated Files
+## 2. Editing Generated Files
 
 **Symptom:** Broken types after `pac code push`; your changes are silently overwritten.
 
@@ -49,7 +31,7 @@ The Power Apps host injects auth tokens into connector calls automatically. Dire
 
 ---
 
-## 4. Local Dev Blocked by Browser (Chrome/Edge post-Dec 2025)
+## 3. Local Dev Blocked by Browser (Chrome/Edge post-Dec 2025)
 
 **Symptom:** `npm run dev` runs, but the Local Playback URL shows a network error in the browser.
 
@@ -60,7 +42,7 @@ The Power Apps host injects auth tokens into connector calls automatically. Dire
 
 ---
 
-## 5. `localStorage` / `sessionStorage` Not Available
+## 4. `localStorage` / `sessionStorage` Not Available
 
 **Symptom:** `localStorage is not defined` or silent failures inside Code Apps iframe.
 
@@ -77,7 +59,7 @@ await MyDataverseService.create({ key: 'value' });
 
 ---
 
-## 6. SharePoint Choice Fields — Wrong Format
+## 5. SharePoint Choice Fields — Wrong Format
 
 **Symptom:** Item creates/updates silently fail or save `null`.
 
@@ -96,7 +78,7 @@ See `sharepoint.md` for full details on People Picker and dynamic choice loading
 
 ---
 
-## 7. People Picker — UPN ≠ Email
+## 6. People Picker — UPN ≠ Email
 
 **Symptom:** Assignment fails, person field saves as null, or wrong user assigned.
 
@@ -115,7 +97,7 @@ const claims = `i:0#.f|membership|${profile.data.userPrincipalName}`;
 
 ---
 
-## 8. `pac code add-data-source` for SharePoint — Don't Use `list-data-source`
+## 7. `pac code add-data-source` for SharePoint — Don't Use `list-data-source`
 
 **Symptom:** `pac code list-data-source` returns nothing or errors for SharePoint.
 
@@ -132,7 +114,7 @@ pac code add-data-source \
 
 ---
 
-## 9. Root CSS Missing — App Doesn't Fill Iframe
+## 8. Root CSS Missing — App Doesn't Fill Iframe
 
 **Symptom:** App renders in a small box with scroll bars outside the content area.
 
@@ -150,10 +132,10 @@ Scrolling only happens inside `<main style={{ flex: 1, overflow: "auto" }}>`.
 
 ---
 
-## 10. Auth — Never Implement MSAL
+## 9. Auth — Never Implement MSAL
 
 **Symptom:** MSAL login loop, duplicate sign-in prompts.
 
 - The Power Apps host handles all authentication.
 - Never import or call `@azure/msal-browser`.
-- User identity (name, email, AAD groups) is available through the host context after `initialize()` resolves.
+- User identity (name, UPN, tenant, session) is available via `getContext()` from `@microsoft/power-apps/app` — call it only when you need that data, it is not a required initialization step.
